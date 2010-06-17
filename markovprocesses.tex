@@ -16,9 +16,271 @@
 
 \tableofcontents
 
-\chapter{Prolougue}
+\chapter{Introduction and Background}
 
 This set of notes discusses discrete time and continuous time Markov Processes.  The notes are compiled from lectures delivered by Mihai Sirbu at the University of Texas in the Spring of 2009.
+
+\section{Conditional Probability and Conditional Expectation}
+
+\subsection{Conditional Probability}
+
+Conditional expectation is a confusing concept because it is not clearly defined.  There are several different conditional expectations, each of which uses similar notation.  For instance, $\bbE[X | Y]$ is a different mathematical object than $\bbE[X | Y = y]$, though these two entities are related.
+
+There are several different ways to go about defining conditional expectation.  The simplest and most intuitive conditonal expectation is derived from conditional probability.  Suppose we are given a probability space $(\Omega, \mcF, \mcP)$.  Philosophically, we think of this probability space encoding all the possible eventualities one could encounter in the world.  But suppose we are interested in some subset of eventualities, $B \in \mcF$.  We can then ask what is the probabilty of some event $A \in \mcF$ occuring given that $B$ holds.  The probability of $A$ given $B$ is
+\[
+\bbP(A | B) = \frac{\bbP(A \cap B)}{\bbP(B)}.
+\]
+Essentially, we have defined a new probability for a world in which only subsets of $B$ may possible occur.  This definition makes intuitive sense.  It measures the ``amount'' of $A$ that overlaps with $B$, normalized by the ``amount'' of $B$ in $\Omega$.
+
+Like any other probability, this can be used to construct integrals. Given a simple function $\phi = \sum a_i \1_{A_i}$, the integral of $\phi$ is
+\[
+\int_\Omega \phi \; \bbP(d\omega|B) = \sum a_i \bbP(A_i | B). 
+\]
+This can be generalized to define integrals, which we call conditional expectations and are of the form
+\[
+\bbE[Z|B] = \int_\Omega Z \; \bbP(d \omega | B).
+\]
+One encounters the idea of conditional expectation often in probability, and hence one may be predisposed to think that a conditional expecation is more useful than a conditional probability.  This is not the case.  A conditional probability encodes much more information than a conditional expectation.
+
+The definition of conditional probability and conditional expectation may be generalized further so that one conditions on a partition of $\Omega$.  In particular, suppose we have a partition $\mcP = \{B_i\}$ of $\Omega$.  Then we can define the conditional probability and conditional expectation for each $B_i$ as above.  We can then define a new form of conditional probability and conditional expectation ``simultaneously across the entire partition'' by
+\[
+\bbP(A | \mcP)(\omega) = \sum_{i} \bbP(A|B_i) 1_{B_i}(\omega)
+\]
+and
+\[
+\bbE[Z | \mcP](\omega) = \sum_{i} \bbE[Z|B_i] 1_{B_i}(\omega).
+\]
+Before the conditional probability and conditional expectation, given a set $B$, produced a real numbers.  Now, however, the conditional probability and conditional expectation, given a partition, produce a random variable.
+
+In probability we often work with an abstract probability space that does not encode any information at all.  This author personally believes that a more thorough classroom treatment of the underlying probability spaces used in mathematical proofs would clarify probabilistic exposition.  However, at this point we must remain apathetic to existensial mysteries of $(\Omega, \mcF, \bbP)$.  Instead, we will put structure on this probability space using random variables.  I like to think of this as a statistical construction of a model.  
+
+Random variables encode qualitative information and quantitative information.  Qualitative information comes in the form of logical propositions.  For instance, if $S_n$ is a random variable that represents the number of times a fair coin lands heads up, then $\{S_5 = 2\}$ corresponds to the subset $\{\omega \in \Omega | S_5(\omega) = 2\}$, which corresponds to the proposition $\forall \omega : S_5(\omega) = 2$.  Since we are working within the context of set theory the set described and the logical proposition are the same thing.  We do not care much about the specifics of $\mcF$.  We simply assume that it can support the question ``which $\omega$ satisfy $S_5(\omega) = 2$?'' or any other question we might like to ask for that matter.  Mathematicians call this measurablility.  We can think of measurability as ``the questions we are allowed to ask.''  If $S_5$ is $\mcF-\mcS$ measurable, then we $\mcF$ encodes enough information to answer questions about a coin being flipped five times.  If $S_5$ is not $\mcF-\mcS$ measurable, then $\mcF$ does not encode enough information to ask questions about a coin being flipped five times.
+
+Quantitative information comes in the form of a distribution.  A distribution is a probability measure.  When constructing a statistical model one generally puts some sort of constraints on the distribution of a random variable.  For instace, one may assume that a random variable is normally distributed or that it is exponentially distributed.  Like $\mcF$, the probability $\bbP$ is given meaning within the context of a specific random variable.  If we continue our example above, $S_2$ is the number of times a fair coin lands heads up after two tosses.  Thus the distribution of $S_2$, $\bbP(S_2 = i)$ where $i=0,1,2$ is well defined by the description of the model.  Let's look at conditional probability within the statistical context we are describing above.
+
+For now, let's take $X$ and $Y$ to be two discrete random variables taking values in $(S,\mcS)$.  We want to examine the conditional distribution of $X$ given $Y$.  If we were to condition on a single value of $Y$, for instance $Y = y$, then the conditional distribution would be a number and is well defined by our work above as
+\[
+\bbP(X \in A | Y = y).
+\]
+But we want to condition on all of the information present in $Y$ at one time.  To that end, notice that a random variable mapping into the discrete state space $(S,\mcS)$ naturally partitions the sample space $\Omega$.  In fact, the \sigalg generated by $Y$  is equivalent to the partition $\{ Y = y_i : y_i \in S\}$.  The conditional distribution of $X$ given $Y$ is then defined like a conditional distribution on a partition to yield the random variable
+\[
+\bbP(X \in A | Y)(\omega) = \sum_i \bbP(X \in A | Y = y_i) 1_{\{y_i\}}(Y(\omega)).
+\]
+There is a convienent alternative to this expression using probability mass functions.  Since $X$ and $Y$ are discrete random variables we may define the joint probability mass function as
+\[
+p(x,y) = \bbP(X = x, Y = y).
+\]
+In terms of the underlying probability $\bbP$, the conditional probability mass function is given by
+\[
+p(x|y) = \bbP(X = x \; | Y = y).
+\]
+In terms of the joint probability mass function, the conditional probability mass function is given by
+\[
+p(x|y) = \frac{p(x,y)}{p(y)}.
+\]
+The pmf is defined for all $y$ in the range of $Y$.  Equivalently, the probability mass function is defined $\bbP^Y$ almost surely, where $\bbP^Y(B)$ is the distribution of $Y$, $\bbP(Y \in B)$.  One simple way to universally define $p(x|y)$ is 
+\[
+p(x|y) = \frac{p(x,y)}{p(y)} \; \1 {\{\textmd{Support } Y \}}(y).
+\]
+The indicator function simply sets $p(x|y) = 0$ whenever $p(y)=0$.
+We can then write the conditional distribution in several different ways:
+\begin{align*}
+\bbP(X \in A | Y)(\omega) & = \sum_{x_j \in A} \sum_i p(x_j | y_i) 1_{\{y_i\}}(Y(\omega)) \\
+& = \sum_{x_j \in A} p(x_j | Y(\omega)) \\
+& = \bbP(X \in A | Y = y) \Big|_{y = Y(\omega)}.
+\end{align*}
+This equality connects the \emph{random variable} $\bbP(X \in A | Y)$ and the number $\bbP(X \in A | Y = y)$.  In particular, we can compute the distribution of $X$ conditioned on $Y$, which is a random varible, through the distribution of $X$ conditioned on $Y = y$, which is a number.
+
+I claimed earlier that the conditional distribution is a much richer mathematical object than a conditaion expectation, and now we can see why.  Given any Borel measurable function, we can calculate the conditional expectation $\bbE[f(X)|Y]$ using the conditional distribution since
+\begin{align*}
+\bbE[f(X)|Y] & = \sum_{j} f(x_j) \bbP(X = x_j | Y) \\
+& = \sum_{j} f(x_j) p(x_j | Y).
+\end{align*}
+Thus we can calculate more than just the conditional expectation of $X$.  For instance, we can calculate any moment of $X$ given $Y$, we can calculate the moment generating function of $X$ given $Y$, and we can calculate the characteristic function of $X$ given $Y$.
+
+We want to extend this theory, which works well for discrete random variables, to random variables which have a density.  There are several different ways we could proceed.  Above we started with the probability $\bbP$ and calculated coditional distributions in terms of probability mass functions.  However, we could have started with probability mass functions and constructed the same theory from that point.  Thinking along these lines, one can start with a probability density function and then define conditional distributiosn and conditional expectations.  If $X$ and $Y$ are two random variables with joint density given by $p(x,y)$, then we can define the conditional density of $X|Y$ as
+\[
+p(x|y) = \frac{p(x|y)}{p(y)} \; \textmd{ on the support of } Y.
+\]
+The conditional distribution given $Y=y$ is then given by
+\[
+\bbP(X \in A | Y = y) = \int_A p(x \; |y) dx
+\]
+and the conditional distribution given $Y$ is given by
+\[
+\bbP(X \in A | Y)(\omega) = \int_A p(x \; |Y(\omega)) dx.
+\] 
+While this approach is computationally convenient I find it philosophically more satisfying to justify these conditional objects through some sort of limiting process.
+
+Suppose we were to start as we did with discrete random variables.  The conditional distribution
+\[
+\bbP(X \in A | Y \in B) = \frac{\bbP(X \in A, Y \in B)}{\bbP(Y \in B)}
+\]
+is well defined so long as $\bbP(Y \in B) > 0$.  Thus the intuitive notion of a conditional distribution stays the same.  But we run into trouble when we try to condition on specific values of $Y$,
+\[
+\bbP(X \in A | Y = y),
+\]
+since $\bbP(Y = y)$ has zero mass.  If we think of $Y$ as the result of some experiement, then $Y = y$ is a rather unlikely set to encounter since the instrument we use to measure $Y$ is most likely imprecise and noisy.  Hence the most truthful statement we can make about the result of our experiment is probably something like $Y \in B_\ep(y)$ where $\ep$ is a small value.  Furthermore, the event $Y \in B_\ep(y)$ has positive mass and hence the conditional distribution
+\[
+\bbP(X \in A | Y \in B_\ep(y))
+\]
+is well defined.  As we shrink $\ep$ to zero this quantity becomes our definition of the conditional distribution of $X$ given $Y = y$, provided the limit exists.  Thus
+\[
+\bbP(X \in A | Y = y) = \lim_{\ep \searrow 0} \bbP(X \in A | Y \in B_\ep(y)).
+\]
+
+Continuous random variables are ontologically similar to differentiable functions.  We use differentiable functions to model discrete phenomenon so that we may use calculus and analysis.  This has been a highly successful endeavor.  A large portion of the physical world is modeled using partial differential equations to provide one example.  However, this does not mean that the universe exists at the level of the continuum.  For instance, the Navier-Stokes partial differential equation models the flow of water.  Yet fluids are made of particles, which are discrete entities.  The model is highly accurate, but it is an approximation of reality.
+
+Continuous random variables are an analogous approximation to reality.  It may be the case that we perform an experiment which provides data up to the hundreths place.  One could try to describe the results of such an experiment using a discrete random variable, but this might be a computational challenge.  It may be more effective to model this experiment using a continuous random variable.  Such a representation provides a good approximation since our instrument has a sufficient level of precision.  In the context of our discussion, we can interpret the conditional distribution $\bbP(X \in A | Y = y)$ as the conditional distribution of $X$ after performing an experiment using an instrument of infinite precision.
+
+Let us return to our definition of $\bbP(X \in A | Y = y)$.  We want to justify that this quantity is well defined.  Writing this limit using our original definition of conditional expectation we have
+\[
+\bbP(X \in A | Y = y) = \lim_{\ep \searrow 0} \frac{\bbP(X \in A, Y \in B_\ep(y))}{\bbP(Y \in B_\ep(y))}.
+\]
+To simplify notation, let $Z = \1_A(X)$.  Let us construct two new measures
+\[
+\nu_A(B) = \bbE[Z 1_B(Y)] \; \textmd{ and } \; \mu(B) = \bbP(Y \in B).
+\]
+The balls $B_\ep(y)$ shrink nicely to $y$ and $\nu << \mu$, the limit
+\[
+\lim_{\ep \searrow 0} \; \frac{\nu_A(B_\ep(y))}{\mu(B_\ep(y))}
+\]
+is well defined according to a variant of Lebesgue's differentiation theorem.  Furthermore, the limit is identical to the Randon-Nikodym derivative $d\nu / d\mu$.  I NEED TO RIGOROUSLY JUSTIFY THE ABOVE STATEMENT.  It will be more convenient in the mathematical proofs that follow to use the Randon-Nikodym derivative $f = d \nu_A / d \mu$ and thus we make the formal definition of the distribution of $X$ conditioned on $Y = y$ to be
+\[
+\bbP(X \in A | Y = y) = \frac{ d \nu_A }{d \mu}.
+\]
+
+% This may not be the problem.
+\begin{comment}
+However, with both the limiting definition and the Radon-Nikodym derivative we need to make sure that we can recover the joint distribution of $X$ and $Y$ from our conditional distribution.
+In particular, we need to show that
+\[
+\bbP(X \in A, Y \in B) = \int_B \bbP(X \in A | Y = y) \bbP^Y(dy).
+\]
+Here $\bbP^Y(dy)$ denotes integrating with respect to the distribution of $Y$.  We choose to approach this problem from the perspective of the Radon-Nikodym derivative.
+
+This is a rather delicate point though.  The conditional expectation is defined $\bbP^Y$ almost surely.  When $Y$ is a continuous random variable there could be ``lots'' of points for which $\bbP(X \in A | Y = y)$ is undefined.
+\end{comment}
+
+Unfortunately, there is subtle technical point we must overcome in our argument above.  For a fixed $A \in \B(\R)$ the object $\bbP(X \in A | Y = y)$ is defined $\bbP^Y$ almost surely.  To detach ourselves from the current syntax and notation consider a Borel measure $m$.  For $m$ to be a measure it must, at the least, map $\B(\R)$ into $[0,1]$.  This means that $m(A)$ maps into $[0,1]$ for all $A \in \B(\R)$.  However, it is unclear, once we fix $y$, that $\bbP(X \in A | Y = y)$ is well defined for all $A \in \B(\R)$.  For each $A$ there is some null set $N_A$ so that $\bbP(X \in A | Y = y)$ is well defined on $N_A^c$.  Outside of $N_A^c$, $\bbP(X \in A | Y = y)$ could be anything.  Thus we are not guarenteed that $\bbP(X \in A | y = y)$ maps into $[0,1]$.  As a small aside, recall that the limit, as defined above, generates ``the Lebesgue set,'' which is identical to $N_A^c$ up to some measure zero change.
+
+One might suggest at this point to simply set $\bbP(X \in A | Y = y)$ to zero whenever $y \in N_A$.  This ensures that we, at a minimum, have defined a function that maps $\B(\R)$ into $[0,1]$, but this does not make $\bbP(X \in \cdot | Y = y)$ a measure.  For instance, it is possible that there is a disjoint collection of sets $\{A_n\}$ for which $N_{A_n}$ have a common element $y$ and the union of $\{A_n\}$ is all of $\R$.  By the procedure suggested above $\bbP(X \in A_n | Y = y) = 0$ for all $n$, but $\bbP(X \in \cup A_n | Y = y) = 1$.  This violates the conutable additivity required of a measure.
+
+Thus, while defining the conditional distribution in the limiting sense or as a Radon-Nikodym derivative provides the correct computation, it does not provide the machinery of a mathematical proof.  What we need to find is an object $\bbP(X \in A | Y = y)$ so that
+\begin{enumerate}
+\item $\bbP(X \in \cdot | Y = y)$ is a measure $\bbP^Y$ almost surely, and
+\item $\bbP(X \in A | Y = \cdot)$ is a measurable function such that
+\[
+\bbP(X \in A, Y \in B) = \int_B \bbP(X \in A | Y = y) \bbP(Y \in dy).
+\]
+This condition is equivalent to
+\[
+\bbP(X \in A | Y = y) = \lim_{\ep \searrow 0} \frac{\bbP(X \in A | Y \in B_\ep(y))}{\bbP(Y \in B_\ep(y))}
+\]
+and
+\[
+\bbP(X \in A | Y = y) = \frac{d \nu_A}{d \mu}.
+\]
+The aforementioned property shows how one can ``factor out'' the marginal distribution $\bbP(Y \in \cdot)$ from the joint distribution in $X$ and $Y$.
+\end{enumerate}
+
+\subsubsection{Regular Conditional Probability}
+The object we are looking for is called a \textbf{regular conditional probability} and can be constructed in the following manner.  Note the use of the rational numbers, which area coubtable, dense set within $\R$.  Seperability plays an important role throughout probability.  For instace, one uses similar ideas to move from discrete time to continuous time stochastic processes.
+
+For each $q \in \bbQ$, let $F(q,y) = RN-\bbP(X \leq q | Y = y)$ where $RN-\bbP(\cdots)$ is the Radon-Nikodym derivative as defined above.  For fixed $q$, the function $F(q,y)$ is $\sigma(Y)$ measurable and well defined on $N_q^c$, which is a set of measure unity.  Since the rational numbers are countable $N = \cup_q N_q$ is also a null set.  Then for all $y \in N^c$,
+\begin{itemize}
+\item $F(q,y)$ is increasing in $q$,
+\item $\lim_{q \ra -\infty} F(q,y) = 0$ and $\lim_{q \ra \infty} F(q,y) = 1$.
+\end{itemize}
+Thus one can define the right continuous extension of $F$ by setting
+\[
+F(x,y) = \lim_{q \searrow x} F(q,y) \; \textmd{ on } N^c.
+\]
+The function $F(x,y)$ is a cummulative distribution function for every $y \in N^c$.  Thus one can define a premeasure $\mu_y(-\infty,x] = F(x,y)$, which can be extended to a measure $\mu_y$ through Catheodory's extension theorem.  This is the conditional distribution for which we have been searching.  We formally define the distributionof $X$ conditioned on $Y = y$ as
+\[
+\bbP(X \in A | Y = y) := \mu_y(A).
+\]
+Measurability is preserved (something we should prove).  This construction satisfies the factoring formula above since
+\begin{align*}
+\int_B \bbP(X \leq x | Y = y) \bbP(Y \in dy) 
+& = \int_B \frac{d \nu_{(-\infty,x]}}{d \bbP^Y} d \bbP^{Y} \\
+& = \bbP(X \leq x, Y \in B). 
+\end{align*}
+We can then apply the Monotone class theorem to show that this holds for all Borel sets $A \in \B(\R)$, that is
+\[
+\int_B \bbP(X \in A | Y = y) \bbP(Y \in dy) = \bbP(X \in A, Y \in B).
+\]
+
+(I need to show that the RN derivative and the limit defined above do indeed agree with $F(x,y)$. when $x$ is not in $\bbQ$.  I think this will hold by the bounded or dominated convergence theorem.)
+
+\subsection{Conditional Expectation}
+
+The foregoing discussion is an attempt to intuitively build the notion of conditional distribution.  One can calculate conditional expectations using conditional distributions in the usual fashion:
+\[
+\bbE[X | Y = y] = \int_\R x \bbP(X \in dx | Y = y).
+\]
+One can always link a conditional expectation to a conditional distribution using indicator functions.  For instance,
+\[
+\bbE[1_A(X) | y = y] = \bbP(X \in A | Y = y).
+\]
+
+The narrative to this point has suggested we start with conditional distributions and build conditional expectations, but the equality above shows how we could have stared with conditional expectations and derived conditional distributions.  In the end, the technical points we encountered leading up to the regular conditional distribution remain.  Thus one approach is not easier than another, though I personally think the discussion of conditional distributions is both richer and more intuitive than conditional expectation.
+
+We would like extend the notion of conditional distribution and conditional expectation even further.  At this point, the main character in our plot becomes the conditional expectation, though this protagonist can always refer back to his friend the conditional distribution as shown above.
+
+Forget about conditioning for the moment.  Let us talk about the mean or expectation of a random variable.  Often we think of the mean as the average of a random variable.  This is true in the sense that 
+\[
+\bbE[X] = \int_\Omega X d \bbP.
+\]
+The expectation is indeed the weigthed average of $X$ under the measure $\bbP$.  But there are other interpretations of the mean.  
+
+The mean is the best scalar estimate of a random variable under mean square error.  In other words the expected value of $X$ minimizes the functional
+\[
+J(a) = \int_\Omega (X - a)^2 d \bbP.
+\]
+If one were to minimize $J(a)$ using standard techniques from calculus he or she would indeed find that
+\[
+\bbE[X] = \arg \min_a J(a).
+\]
+This author find this interpretation more fundamental than the weighted average of $X$.  This minimization tells us why the weighted average of $X$ matters in the first play.  One can try to find the best scalar estimate of $X$ using other measures of error.  For instance, minimizing
+\[
+\int_\Omega |X - a| d \bbP
+\]
+produces the median of $X$ while minimizing
+\[
+\bbP( |X - a| \geq \ep )
+\]
+as $\ep$ goes to zero produces the mode of $X$.  (When does one encounter the harmonic mean?  The geometric mean?  What can one say about these quantities?)
+
+We can take this idea and extend it to more complicated objects.  We neglected to mention within what space the random variable $X$ resides.  For the discussion that follows it will be most helpful to think of $X \in L^2(\Omega, \mcF, \bbP)$.  We will then be working in an inner product space.  Inner product spaces are nice because the have a geometric interpretation.  From this point forth ``best estimate'' will refer to ``best estimate under mean squared error.''
+
+We can now look at estimates for $X$ within linear subspaces of $L^2(\Omega, \mcF, \bbP)$.  For instance, we could try to find the best estimate of $X$ over elements of $span \{Y_0, \cdots, Y_n\}$, which is a linear subspace of $L^2(\Omega, \mcF, \bbP)$.  
+More general yet, when $\mcG$ is a sub-\sigalg of $\mcF$, then $L^2(\Omega, \mcG, \bbP)$ is a closed linear subspace of $L^2(\Omega, \mcF, \bbP)$.  Since we are working in a Hilbert (and hence Banach) space we have the calculus of variations at our disposal to minimize functionals.  Thus, the best $\mcG$-measurable estimate of $X$ is the random variable which minimizes the functional
+\[
+J(Z) = \int_\Omega (X - Z)^2 d \bbP \; \textmd{ over all } \mcG-\textmd{measurable } Z.
+\]
+
+Calculating the Gateaux derivative of $J$ (which coincides with the Frechet derivative in this case) we get
+\[
+DF[Z](V) = 2 \int_\Omega (X-Z) V d \bbP
+\]
+The first order condition for the minimum value $Z^*$ is then
+\[
+\int_\Omega (X - Z) V d \bbP = 0 \; \textmd{ for all } \mcG-\textmd{measurable } V.
+\]
+Since we are working in an inner product space we can refer to our geometric intuition.  There are several ways of restating this first order condition.  For instance, $X-Z^*$ is perpendicular to the subspace $L^2(\Omega, \mcG, \bbP)$, or $Z^*$ is the projection of $X$ onto $L^2(\Omega, \mcG, \bbP)$.
+
+An equivalent requirement for our first order condition to hold is that
+\[
+\int_\Omega (X - Z) 1_A d \bbP \; \textmd{ for all } A \in \mcG.
+\]
+This reduces to the familiar definition of conditional expectation
+\[
+\int_A X = \int_A Z \; \textmd{ for all } A \in \mcG.
+\]
+This definition is advantageous because it works for all $X \in L^1(\Omega, \mcF, \bbP)$.  However, I personally think it is less intuitive since one removes the proper context for understanding conditional expectation when moving beyond inner product spaces.
+
+(Need to write something connection conditional distribution to conditional expectation.  Perhaps through $\bbE(X|Y) = \bbP(X|Y=y)|y=Y$.)
 
 \chapter{Markov Chains}
 
@@ -32,13 +294,13 @@ The foregone discussion is still rather ambiguous.  We need to be more specific 
 
 Martingales can be thought of as the fundamental random object within stochastic processes.  All stochastic process can be decomposed into a ``deterministic'' part and a ``random'' part.  The random part is always a martingale.  Martingales can also be thought of as the largest non-parametric collection of stochastic processes (modulo processes of finite variation).  In this way, the collection of martingales is to a parametric family of random process as an $L_1$ function is to the parametric family of normal random variables.
 
-As suggested by the title of this course, we are interested in yet more specific stochastic processes.  In particular, we want to study Markov processes.  Markov processes are a special subset of martingales.  
+As suggested by the title of this course, we are interested in yet more specific stochastic processes.  In particular, we want to study Markov processes.  Markov processes are a special subset of martingales.  Whereas martingales are defined as a forecasted expected value given the historical trajectory, Markov Processes are defined in terms of future distributions conditioned on past information.  
 
-Whereas martingales are defined as a forecasted expected value given the historical trajectory, Markov Processes are defined in terms of future distributions conditioned on past information.  In particular, a \textbf{Markov process} \index{Markov Process} $X_n$ is a process such that the distribution of $X_{n+t}$ conditioned on $X_0, \cdots, X_n$ is identical to the distribution of $X_{n+t}$ conditioned on $X_n$.  In mathematical syntax,
+A \textbf{Markov process} \index{Markov Process} $(X_n)$ is a stochastic process such that the distribution of $X_{n+t}$ conditioned on $X_0, \cdots, X_n$ is identical to the distribution of $X_{n+t}$ conditioned on $X_n$.  In mathematical syntax,
 \[
 \bbP(X_{n+1} \in B | X_0, \cdots, X_n) = \bbP(X_{n+1} \in B | X_n) \textmd{ for all } B \in \mcB(\R^d).
 \]
-A Markvo process is \index{time homogeneous} time homogeneous when the conditional distribution of $X_{n+1}$ given $X_n$ does not depend on $n$.
+A Markov process is \index{time homogeneous} \textbf{time homogeneous} when the conditional distribution of $X_{n+1}$ given $X_n$ does not depend on $n$.
 
 The first consequence of this definition is that a Markov process is a martingale as claimed earlier.  In particular, a Markov process is a martingale whose forecast any distance into the future, given \emph{only its current value}, is its current value.  Interpreting this in terms of statistics again, the  statistic composed soley of $X_n$ that is closest to $X_{n+t}$ is identical to $X_n$.  We often say that ``Markov Processes'' have no memory, since the above definitions tell us that
 \[
@@ -47,7 +309,6 @@ The first consequence of this definition is that a Markov process is a martingal
 In other words, all the information encoded in $X_0$ through $X_{n-1}$ is not used; it is forgotten.
 
 \begin{example}[Ehrenfest Chain]
-
 Imagine a box containing $r$ particles is partitioned by a panel with a small opening.  At each step in time, a particle is picked uniformly at random and moved to the opposite side of the box.  Thus if there are $k$ particles in Room 1 at time $n$, and a particle is selected from Room 1, then there will be $k-1$ particles in Room 1 at time $n+1$.  Conversely, if there are $k$ particles in Room 1 at time $n$, and a particle is selected form Room 2, there there will be $k+1$ particles ir Room 1 at time $n+1$.  To put this within a probabilistic framework, let
 \[
 X_n := \{ \# \textmd{ of particles in Room 1} \}.
@@ -63,14 +324,91 @@ In this case we construct the probability $\bbP$ so that $X_n$ is a Markov Proce
 \end{example}
 
 \begin{example}[Branching Process]
-We construct another Markov process called a branching process.  We can think of this process as characterizing a tree or as recording a population of individuals.  Let $(\xi_i)$ be a sequence of independent and identically distributed random variables mapping into the natural numbers.  The process $X_n$ records the number of individuals in the population.  At time $n+1$, one adds $\xi_{n+1}$ individuals to the population resulting in $X_{n+1} = X_n + \xi_{n+1}$ individuals.  Thus the distribution of $X_{n+1}$ given $X_n$ is
+Imagine several cells residing within a nutritious petri dish.  At each step in time a cell may divide into any number of new cells.  It also may not divide at all.  A cell that does not divide is said to divide into one cell.  Each cell divides independently and according to the same law $Q$.  We want to model the population of cells through time.
+
+Let $(\xi_{n,k})$ be a sequence of independent random variables mapping into the natural numbers with distribution $Q$.  Let $X_n$ denote the population of cells at time $n$.  Between time $n$ and $n+1$ the $k$th cell divides into $\xi_{(n+1),k}$ cells.  Thus if we start with $i$ cells at time $n$, we will have $\sum_{k=1}^i \xi_{(n+1),k}$ cells at time $n+1$.  The probability of this transition is given by
 \[
-\bbP(X_{n+1} = j | X_n = i) = \bbP(\xi_{n+1} = j-i).
+\bbP(X_{n+1} = j | X_n = i) = \bbP \Big[ \sum_{k=1}^i \xi_{1,k} = j \Big].
 \]
 \end{example}
 
-\begin{example}
+\begin{example}[Flipping an unknown coin]
+Suppose we have a coin, but we do not know how the coin is weighted and hence we do not know how often it will lands heads up and how often it will land tails up.  We do know that the coin is not changing significantly through time.  Hence the frequency with which the coin will land heads up does not change in time.  (This is a somewhat paradoxical statement, since frequency is definied as some long term average and hence the coin very well could be changing in time, but we might not see this in the frequency.)  Let $X_n$ represent the $i$th flip of the coin, where $X_i = 1$ if the coin lands heads up and $X_i = 0$ if the coin lands heads down.  Let $\Theta_n$ represent our state of knowledge about the probability of the coin at time $n$.  Then the conditional distribution of $X_i$ given $\Theta_0$ is
+\[
+\begin{cases}
+\bbP[ X_i = 1 | \Theta_0 = \theta] = \theta \\
+\bbP[ X_i = 0 | \Theta_0 = \theta] = 1 - \theta.
+\end{cases}
+\]
 
+As an excercise in Bayesian inference, let's calculate the posterior distribution of $X_{n+1}$ given the data $X_{1}$ through $X_{n}$.  We will do this through using the intermediary $\Theta_n$.  In particular, we know that
+\begin{align*}
+\bbP [ X_{n+1} = 1 | X_1 = i_1 , \ldots, X_n = i_n ]
+& = \int_0^1 \bbP [  X_{n+1} = 1 | \Theta_{n} = \theta , X_1 = i_1 , \ldots, X_n = i_n ] \\
+& \;\;\;\; \times \bbP[ \Theta_{n} \in d\theta | X_1 = i_1, \ldots, X_n = i_n] d \theta.
+\end{align*}
+
+WHEN DISCUSSING CONDITIONAL EXPECTATION DISCUSS THIS TERMINIOLOGY, NOTATION, AND TRICK.
+
+But once one knows that $\Theta_{n} = \theta$, our previous coin flips provide no useful information.  The the product given above becomes
+\[
+\bbP[ X_{n+1} = 1 | \Theta_{n} = \theta] \times
+\bbP[ \Theta_{n} \in d \theta | X_1 = i_1, \ldots, X_n = i_n].
+\]
+Thus we have factored the posterior distribution of $X_{n+1}$ given $X_1$ through $X_n$ as the predictive distribution of $X_{n+1}$ given $\Theta_n$ times the posterior distribution for $\Theta_n$ given $X_1$ through $X_n$.  If we assume that our prior distribution, that is our distrubtion for the probability of the coin at time zero is uniform, then we can derive analytically (through conjugacy) that
+\[
+\bbP[ \Theta_n \in d \theta | X_1 = i_1, \ldots, X_n = i_n]
+= \frac{\theta^k (1 - \theta)^{n-k} d \theta }{\int_0^1 \theta^k (1-\theta)^k d\theta}
+\]
+where $k = i_1 + \cdots i_n$.  Thus we see that $X_1 + \cdots + X_n$ is a sufficient statistic for $\Theta_n$.  In other words, if we let $S_n$ be the number of times heads has been flipped in $n$ trials, $S_n = X_1 + \cdots + X_n$, then we can derive that
+\[
+\bbP[\Theta_n \in d \theta | S_n = k] 
+= \frac{\theta^k (1 - \theta)^{n-k} d \theta }{\int_0^1 \theta^k (1-\theta)^k d\theta}.
+\]
+Concluding our work above this shows us that
+\begin{align*}
+\bbP[X_{n+1} = 1 | S_n = k]  
+& = \int_0^1 \bbP[X_{n+1} = 1 | \Theta_n = \theta] \times \bbP[ \Theta_n \in d \theta | S_n = k] \\
+& = \int_0^1 \underbrace{\theta}_{\textmd{likelihood}} \times \underbrace{\frac{\theta^k (1 - \theta)^{n-k} d \theta }{\int_0^1 \theta^k (1-\theta)^k } \; d \theta}_{\textmd{``posterior''}}
+\end{align*}
+This shows us how to derive the transition probability for the process $S_n$ since
+\[
+\bbP[S_{n+1} = k+1 | S_n = k] = \bbP[X_{n+1} = 1 | S_n = k].
+\]
+This example is a slight twist on the random walk in which one infers the chance a particle moves to the right or left as he or she observes the particle.
+
+\begin{comment}
+\begin{remark}
+This example also illustrates a fable articulated by Nasim Taleb.  Imagine a turkey that lives happily alone on a farm.  Every day the turkey, who has deep existensial concerns, records whether he lives or does not live through the day.  He is not told with what chance he will live, but he assumes that every day is more or less like the last.  After living for $n$ consecutive days the turkey's posterior probability prediction that he will live tomorrow is given by
+\[
+\bbP[X_{n+1} = 1 | S_n = n] = \frac{\int_0^1 \theta^{n+1} d \theta}{\int_0^1 \theta^n d \theta} = \frac{n+1}{n+2}. 
+\]
+Thus the turkey thinks it is very likely that he will live tomorrow. 
+...
+
+The more I think about this though, the more Talib doesn't make sense.   For the most part the turkey is correct.  He does have a high chance of living throughout the day.  The day that this does not occur does have a small probabilty of occuring.  It also has severe consequences.  Really, it is the consequences that are devestating.  One must have a loss function to measure how devastating these consequences are.  Relating this to finance, the turkey needs to have some sort of insurance or financial instrument he is using to make this analogy valid.  Even then, if he has calculated his probability correctly, it shouldn't matter.  One wants to include extreme events because they affect the price of an assset.  With CDO's extreme events should have made these assets much cheaper relative to the alleged return.
+\end{remark}
+\end{comment}
 \end{example}
+
+We now formally define a Markov process and transition probability.  As discussed earlier, a Markov process is a process whose future distribution, conditioned on the past observations, depends only on the last observed state of the process.  The conditional distribution, in turn, can be characterized by a transition probability, which tells one how the process will be distributed one step into the future, given the current state of the process.
+
+\begin{definition}
+Let $(\Omega, \mcF, \mcF_n, \bbP)$ be a probabilty space and $(S,\mcS)$ be a state space.  A \textbf{Markov chain} or \textbf{Markov process} with respect to the filtration $(\mcF_n)$ is a stochastic process $(X_n)$ whose conditional distribution is governed by
+\[
+\bbP(X_{n+1} \in B | \mcF_n) = \bbP(X_{n+1} \in B | X_n) \textmd{ for all } B \in \mcS.
+\]
+When $X_n$ is a Markov chain with respect to some filtration $(\mcF_n)$, it is a Markov chain with respect to the natural filtration as well.
+\end{definition}
+
+\begin{definition}
+A function $p:S \times \mcS \ra [0,1]$ is a \index{transition probability} \textbf{transition probability} if
+\begin{enumerate}
+\item for all $x \in S$, $A \mapsto p(x,A)$ is a probability,
+\item for all $A \in \mcS$, $x \mapsto p(x,A)$ is measurable.
+\end{enumerate}
+\end{definition}
+
+A transition probability characterizes a Markov process and a Markov process characterizes a transition probabiltiy.  To clarify this link we must discuss the connection between conditioning on a random variable and conditioning on a \sigalg.
 
 \end{document}
