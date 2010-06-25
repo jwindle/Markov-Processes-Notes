@@ -22,9 +22,11 @@ This set of notes discusses discrete time and continuous time Markov Processes. 
 
 \section{Conditional Probability and Conditional Expectation}
 
-\subsection{Conditional Probability}
+My probabilistic upbringing was a bit scattered and hence this section is an opportunity to collect my thoughts and orgainze them into a coherent whole.  Conditional probability and conditional expectation are not well defined.  By this I mean that there are several different types of conditional probabilities and conditional expectations.  The notation for these different entities is often similar, which is justified since there is a way to tie everything together.  However, it is not always obvious how one makes these connections.  To give one example, $\bbE[X | Y]$ is a different mathematical object than $\bbE[X | Y = y]$, though these two entities are related.  These conditional expectations are connected since $\bbE[X|Y] = \bbE[X|Y=y]|_{Y}$.  The notation helps and hinders simultaneously.
 
-Conditional expectation is a confusing concept because it is not clearly defined.  There are several different conditional expectations, each of which uses similar notation.  For instance, $\bbE[X | Y]$ is a different mathematical object than $\bbE[X | Y = y]$, though these two entities are related.
+I hope to provide a narrative of conditional probability and conditional expectation that is intuitive.  From this perspective, it may seem, at times as if conditional expectation and conditional probability serve different purposes.  They do to some extent, however one should always remember that a probability and expectation are complimentary mathematical objects.  Given a probability $\bbP$ one can construct an expectation $\bbE$ through Catheodory's Crank.  Conversely, given an expectation $\bbE$ one can construct a probability $\bbP$ by $\bbP(A) = \bbE[1_A]$.  Thus there is always a bridge linking probabiltiy to expectation.  We begin with conditional probability since I find this to be a more fundamental concept.
+
+\subsection{Conditional Probability}
 
 There are several different ways to go about defining conditional expectation.  The simplest and most intuitive conditonal expectation is derived from conditional probability.  Suppose we are given a probability space $(\Omega, \mcF, \mcP)$.  Philosophically, we think of this probability space encoding all the possible eventualities one could encounter in the world.  But suppose we are interested in some subset of eventualities, $B \in \mcF$.  We can then ask what is the probabilty of some event $A \in \mcF$ occuring given that $B$ holds.  The probability of $A$ given $B$ is
 \[
@@ -98,7 +100,13 @@ I claimed earlier that the conditional distribution is a much richer mathematica
 \end{align*}
 Thus we can calculate more than just the conditional expectation of $X$.  For instance, we can calculate any moment of $X$ given $Y$, we can calculate the moment generating function of $X$ given $Y$, and we can calculate the characteristic function of $X$ given $Y$.
 
-We want to extend this theory, which works well for discrete random variables, to random variables which have a density.  There are several different ways we could proceed.  Above we started with the probability $\bbP$ and calculated coditional distributions in terms of probability mass functions.  However, we could have started with probability mass functions and constructed the same theory from that point.  Thinking along these lines, one can start with a probability density function and then define conditional distributiosn and conditional expectations.  If $X$ and $Y$ are two random variables with joint density given by $p(x,y)$, then we can define the conditional density of $X|Y$ as
+To this point we had only been working with random varialbes that take on a discrete set of values.  We want to extend these ideas to random variables that map into a continuum.  Before we dive into the mathematics needed to extend these ideas, let's pause and appreciate why we want to use such random varibles in the first place.
+
+Continuous random variables are ontologically similar to differentiable functions.  We use differentiable functions to model discrete phenomenon so that we may use calculus and analysis.  This has been a highly successful endeavor.  A large portion of the physical world is modeled using partial differential equations to provide one example.  However, this does not mean that the universe exists at the level of the continuum.  For instance, the Navier-Stokes partial differential equation models the flow of water.  Yet fluids are made of particles, which are discrete entities.  The model is highly accurate, but it is an approximation of reality.
+
+Continuous random variables are an analogous approximation to reality.  It may be the case that we perform an experiment which provides data up to the hundreths place.  One could try to describe the results of such an experiment using a discrete random variable, but this might be a computational challenge.  It may be more effective to model this experiment using a continuous random variable.  Such a representation provides a good approximation since our instrument has a sufficient level of precision.  In the context of our discussion, we can interpret the conditional distribution $\bbP(X \in A | Y = y)$ as the conditional distribution of $X$ after performing an experiment using an instrument of infinite precision.
+
+Returning to the mathematics, we want to extend the ideas above, which work well for discrete random variables, to random variables which have a density.  There are several different ways we could proceed.  Above we started with the probability $\bbP$ and calculated coditional distributions in terms of probability mass functions.  However, we could have started with probability mass functions and constructed the same theory from that point.  Thinking along these lines, one can start with a probability density function and then define conditional distributiosn and conditional expectations.  If $X$ and $Y$ are two random variables with joint density given by $p(x,y)$, then we can define the conditional density of $X|Y$ as
 \[
 p(x|y) = \frac{p(x|y)}{p(y)} \; \textmd{ on the support of } Y.
 \]
@@ -128,10 +136,6 @@ is well defined.  As we shrink $\ep$ to zero this quantity becomes our definitio
 \[
 \bbP(X \in A | Y = y) = \lim_{\ep \searrow 0} \bbP(X \in A | Y \in B_\ep(y)).
 \]
-
-Continuous random variables are ontologically similar to differentiable functions.  We use differentiable functions to model discrete phenomenon so that we may use calculus and analysis.  This has been a highly successful endeavor.  A large portion of the physical world is modeled using partial differential equations to provide one example.  However, this does not mean that the universe exists at the level of the continuum.  For instance, the Navier-Stokes partial differential equation models the flow of water.  Yet fluids are made of particles, which are discrete entities.  The model is highly accurate, but it is an approximation of reality.
-
-Continuous random variables are an analogous approximation to reality.  It may be the case that we perform an experiment which provides data up to the hundreths place.  One could try to describe the results of such an experiment using a discrete random variable, but this might be a computational challenge.  It may be more effective to model this experiment using a continuous random variable.  Such a representation provides a good approximation since our instrument has a sufficient level of precision.  In the context of our discussion, we can interpret the conditional distribution $\bbP(X \in A | Y = y)$ as the conditional distribution of $X$ after performing an experiment using an instrument of infinite precision.
 
 Let us return to our definition of $\bbP(X \in A | Y = y)$.  We want to justify that this quantity is well defined.  Writing this limit using our original definition of conditional expectation we have
 \[
@@ -185,9 +189,11 @@ The aforementioned property shows how one can ``factor out'' the marginal distri
 \end{enumerate}
 
 \subsubsection{Regular Conditional Probability}
+
 The object we are looking for is called a \textbf{regular conditional probability} and can be constructed in the following manner.  Note the use of the rational numbers, which area coubtable, dense set within $\R$.  Seperability plays an important role throughout probability.  For instace, one uses similar ideas to move from discrete time to continuous time stochastic processes.
 
-For each $q \in \bbQ$, let $F(q,y) = RN-\bbP(X \leq q | Y = y)$ where $RN-\bbP(\cdots)$ is the Radon-Nikodym derivative as defined above.  For fixed $q$, the function $F(q,y)$ is $\sigma(Y)$ measurable and well defined on $N_q^c$, which is a set of measure unity.  Since the rational numbers are countable $N = \cup_q N_q$ is also a null set.  Then for all $y \in N^c$,
+\begin{proof}[Regular Conditional Probability]
+For each $q \in \bbQ$, let $F(q,y) = \textmd{RN } \bbP(X \leq q | Y = y)$ where $\textmd{RN } \bbP(\cdots)$ is the Radon-Nikodym derivative as defined above.  For fixed $q$, the function $F(q,y)$ is $\sigma(Y)$ measurable and well defined on $N_q^c$, which is a set of measure unity.  Since the rational numbers are countable $N = \cup_q N_q$ is also a null set.  Then for all $y \in N^c$,
 \begin{itemize}
 \item $F(q,y)$ is increasing in $q$,
 \item $\lim_{q \ra -\infty} F(q,y) = 0$ and $\lim_{q \ra \infty} F(q,y) = 1$.
@@ -212,6 +218,40 @@ We can then apply the Monotone class theorem to show that this holds for all Bor
 \]
 
 (I need to show that the RN derivative and the limit defined above do indeed agree with $F(x,y)$. when $x$ is not in $\bbQ$.  I think this will hold by the bounded or dominated convergence theorem.)
+\end{proof}
+
+\subsubsection{A look back}
+
+Let us take a moment and reflect upon what we have been doing.  There is one fundamental and invertible operation at work here.  In one sense we have been learning how to factor probability distributions. Let us use a joint density $p(x,y)$ for the moment.  You can factor the joint density $p(x,y)$ as $p(x|y)p(y)$.  However, one can also work in the opposite direction, which is often the case when trying to construct probabilities.  You start with the density $p(y)$ and the conditional density $p(x|y)$ and want to derive the joint density $p(x,y)$.  For instance, this is the case in Bayesian statistics.  Our work with conditional expectation above tells us that the joint density must be $p(x,y) = p(x|y)p(y)$.
+
+So far we have seen several different ways to factor probabilities.  To recapitulate we have
+\begin{itemize}
+\item Factoring Events: $\bbP(A \cap B) = \bbP(A | B) \bbP(B)$.  
+
+Let us consider a simple example to emphasize that this is not just about factoring, it is also about constructing probabilities.  Suppose we have defined a probability $P_0$ on the \sigalg generated by the disjoint set of events $\{B_i\}$.  Suppose further that for a disjoint set of events $\{A_i\}$ we know what the probability of $A_i$ given an event $B_j$.  Let's denote this quantity by $P_1(A_i | B_j)$.  Then one can define the joint probability of $A_i$ and $B_j$ by $P_2(A_i \cap B_j) = P_1(A_i | B_j) P_0(B_j)$.  The premeasure $P_2$ then generates a measure $\bbP$ defined on the \sigalg generated by the collection $\{A_i,B_j\}$ which is consistent the $P_0, P_1,$ and $P_2$.
+\item Factoring densities: $p(x,y) = p(x|y)p(y)$.
+\item Factoring a distribution into a conditional distribution and a density:
+\[
+\bbP(X \in A, Y \in B) = \int_B \bbP(X \in A | Y = y) \bbP(Y \in dy).
+\]
+\end{itemize}
+
+There is one more type of conditional probability I would like to consider: a probability conditioned on a \sigalg.  Analogous to the properties above, the characteristic property of such a conditional probability is that
+\[
+\bbP(A \cap B) = \int_B \bbP(A | \mcG) \bbP(d \omega) \textmd{ for all } B \in \mcG.
+\]
+I think this statement is ultimately somewhat misleading.  We need to be more careful about how we state the above equality.  First, define the measure $Q = \bbP|_\mcG$.  The important point is that $Q$ is a probability defined on $\mcG$.  Second, let $P(A,\omega)$ denote the conditional probability of $A$ given the \sigalg $\mcG$.  This function is analogous to a transition probability or a probability conditioned on $Y=y$.  In particular, $P$ satisfies
+\begin{enumerate}
+\item  For $\mcG$-almost every $\omega$, $P(\cdot, \omega)$ is a probability on $\mcF$,
+\item For every $A \in \mcF$, $P(A,\cdot)$ is $\mcG$-measurable.
+\end{enumerate}
+Now, with our new variables, we require that the conditional probability $P$ satisfy the factorization
+\[
+\bbP(A \cap B) = \int_B P(A, \omega) Q(d \omega).
+\]
+As before, we must justify that such an object, which once more is called a \emph{regular conditional probability}, exists.  We will refrain from presenting the regularity conditions and proof for the moment.
+
+Often when discussing conditional probability or conditional expectation one uses the ubiquitious symbol $\bbP$ throughout.  Whenever you see this, keep in mind that you will be factoring the measure $\bbP$ into a conditional probability and a probability defined \textbf{on a sub-\sigalg}.
 
 \subsection{Conditional Expectation}
 
@@ -219,20 +259,22 @@ The foregoing discussion is an attempt to intuitively build the notion of condit
 \[
 \bbE[X | Y = y] = \int_\R x \bbP(X \in dx | Y = y).
 \]
-One can always link a conditional expectation to a conditional distribution using indicator functions.  For instance,
-\[
-\bbE[1_A(X) | y = y] = \bbP(X \in A | Y = y).
-\]
 
 The narrative to this point has suggested we start with conditional distributions and build conditional expectations, but the equality above shows how we could have stared with conditional expectations and derived conditional distributions.  In the end, the technical points we encountered leading up to the regular conditional distribution remain.  Thus one approach is not easier than another, though I personally think the discussion of conditional distributions is both richer and more intuitive than conditional expectation.
 
-We would like extend the notion of conditional distribution and conditional expectation even further.  At this point, the main character in our plot becomes the conditional expectation, though this protagonist can always refer back to his friend the conditional distribution as shown above.
+We would like extend the notion of conditional distribution and conditional expectation even further.  At this point, the main character in our plot becomes the conditional expectation, though this protagonist can always refer back to his friend the conditional distribution as through the relationship
+\[
+\bbE[1_A(X) | Y = y] = \bbP(X \in A | Y = y).
+\]
+Of course, we need a regular conditional probability to makes sense of this and hence there are technical issues we must consider when stating such an equality.
 
-Forget about conditioning for the moment.  Let us talk about the mean or expectation of a random variable.  Often we think of the mean as the average of a random variable.  This is true in the sense that 
+\subsubsection{Calculus of Variations and Conditioning on a \sigalg}
+
+Let us talk about the mean or expectation of a random variable.  Often we think of the mean as the average of a random variable.  This is true in the sense that 
 \[
 \bbE[X] = \int_\Omega X d \bbP.
 \]
-The expectation is indeed the weigthed average of $X$ under the measure $\bbP$.  But there are other interpretations of the mean.  
+The expectation is the weigthed average of $X$ under the measure $\bbP$.  But there are other interpretations of the mean.  
 
 The mean is the best scalar estimate of a random variable under mean square error.  In other words the expected value of $X$ minimizes the functional
 \[
@@ -242,7 +284,7 @@ If one were to minimize $J(a)$ using standard techniques from calculus he or she
 \[
 \bbE[X] = \arg \min_a J(a).
 \]
-This author find this interpretation more fundamental than the weighted average of $X$.  This minimization tells us why the weighted average of $X$ matters in the first play.  One can try to find the best scalar estimate of $X$ using other measures of error.  For instance, minimizing
+I find this interpretation more fundamental than the weighted average of $X$.  This minimization tells us why the weighted average of $X$ matters in the first play.  One can try to find the best scalar estimate of $X$ using other measures of error.  For instance, minimizing
 \[
 \int_\Omega |X - a| d \bbP
 \]
@@ -252,13 +294,14 @@ produces the median of $X$ while minimizing
 \]
 as $\ep$ goes to zero produces the mode of $X$.  (When does one encounter the harmonic mean?  The geometric mean?  What can one say about these quantities?)
 
-We can take this idea and extend it to more complicated objects.  We neglected to mention within what space the random variable $X$ resides.  For the discussion that follows it will be most helpful to think of $X \in L^2(\Omega, \mcF, \bbP)$.  We will then be working in an inner product space.  Inner product spaces are nice because the have a geometric interpretation.  From this point forth ``best estimate'' will refer to ``best estimate under mean squared error.''
+We can take this idea and extend it to more complicated objects.  To do so we need to examine the space in which random variable $X$ resides.  For the discussion that follows it will be most helpful to think of $X \in L^2(\Omega, \mcF, \bbP)$.  We will then be working in an inner product space.  Inner product spaces are nice because the have a geometric interpretation.  From this point forth ``best estimate'' will refer to ``best estimate under mean squared error.''  For those familiar with least squares, this suggest that the best estimate is a projection onto a linear subspace.
 
-We can now look at estimates for $X$ within linear subspaces of $L^2(\Omega, \mcF, \bbP)$.  For instance, we could try to find the best estimate of $X$ over elements of $span \{Y_0, \cdots, Y_n\}$, which is a linear subspace of $L^2(\Omega, \mcF, \bbP)$.  
+We can look at estimates for $X$ within linear subspaces of $L^2(\Omega, \mcF, \bbP)$.  For instance, we could try to find the best estimate of $X$ over elements of $span \{Y_0, \cdots, Y_n\}$, which is a linear subspace of $L^2(\Omega, \mcF, \bbP)$.  
 More general yet, when $\mcG$ is a sub-\sigalg of $\mcF$, then $L^2(\Omega, \mcG, \bbP)$ is a closed linear subspace of $L^2(\Omega, \mcF, \bbP)$.  Since we are working in a Hilbert (and hence Banach) space we have the calculus of variations at our disposal to minimize functionals.  Thus, the best $\mcG$-measurable estimate of $X$ is the random variable which minimizes the functional
 \[
 J(Z) = \int_\Omega (X - Z)^2 d \bbP \; \textmd{ over all } \mcG-\textmd{measurable } Z.
 \]
+This is analogous to our definition of the expectation above, but now we let $Z$ reside in a space larger than $\R$.
 
 Calculating the Gateaux derivative of $J$ (which coincides with the Frechet derivative in this case) we get
 \[
@@ -268,17 +311,42 @@ The first order condition for the minimum value $Z^*$ is then
 \[
 \int_\Omega (X - Z) V d \bbP = 0 \; \textmd{ for all } \mcG-\textmd{measurable } V.
 \]
-Since we are working in an inner product space we can refer to our geometric intuition.  There are several ways of restating this first order condition.  For instance, $X-Z^*$ is perpendicular to the subspace $L^2(\Omega, \mcG, \bbP)$, or $Z^*$ is the projection of $X$ onto $L^2(\Omega, \mcG, \bbP)$.
+Since we are working in an inner product space we can refer to our geometric intuition.  For instance, $X-Z^*$ is perpendicular to the subspace $L^2(\Omega, \mcG, \bbP)$, or $Z^*$ is the projection of $X$ onto $L^2(\Omega, \mcG, \bbP)$.
 
 An equivalent requirement for our first order condition to hold is that
 \[
 \int_\Omega (X - Z) 1_A d \bbP \; \textmd{ for all } A \in \mcG.
 \]
-This reduces to the familiar definition of conditional expectation
-\[
+This reduces to the familiar definition of conditional expectation.  The conditional expectation of $X$ given $\mcG$ is the $\mcG$-measurable random variable $Z$ for which
+\begin{equation}
+\label{classic-cond-expectation}
 \int_A X = \int_A Z \; \textmd{ for all } A \in \mcG.
+\end{equation}
+This definition is advantageous because it works for all $X \in L^1(\Omega, \mcF, \bbP)$.  However, I personally think it is less intuitive since one loses geometric intuition when moving beyond inner product spaces.
+
+In deriving (\ref{classic-cond-expectation}) we started with $L^2$, which is an inner product space and hence intuitive.  We defined conditional expectation in this space as the best estimate of a random variable.  This gave us the geometric interpretations of conditional expectation that make sense in an inner product space.  However, to understand what is happening when we move beyond $L^2(\Omega, \mcF, \bbP)$ we must work in the opposite direction.  We now take (\ref{classic-cond-expectation}) as our starting point and work from their to create meaning to the conditional expectation.  To do so we will need to discuss Banach spaces, linear functionals, and duality.
+
+Our starting point, as suggested above, is the linear functional
+\[
+L_X(\1_A) = \int_\Omega X \1_A \bbP.
 \]
-This definition is advantageous because it works for all $X \in L^1(\Omega, \mcF, \bbP)$.  However, I personally think it is less intuitive since one removes the proper context for understanding conditional expectation when moving beyond inner product spaces.
+The linear functional, as currently defined maps simple functions into real numbers, i.e. $L_X : \{\textmd{simple functions}\} \mapsto \R$.  Simple functions sit within the space of all measurable functions $\L^0(\Omega, \mcF, \bbP)$.  We want to enlarge the domain of $L_X$ to a closed Banach space $D$ so that $L_X : D \mapsto \R$ is continuous.  
+This is getting more complicated than I anticipated.  See Ash's Probability and Measure, section 4.2.  One can extend the space on which linear functionals are defined in a meaningful way.  I think this will give us $L^\infty$.  This, in turn, should relate to duality for linear functionals.  This will ultimately mean that the conditional expectation $Z$ of a random variable $X$ is the $\mcG$-measurable random variable such that
+\[
+\ip{X}{V} = \ip{Z}{V} \textmd{ for all } V \in \textmd{some space}.
+\]
+Thus one can see that $X$ and $Z$ define the same linear functional.  But I'm not sure what intuition this gives a person about the meaning of conditional expectation.
+
+We can think about the integral above as linear functionals.  If $X \in L^1$, then we can define
+\[
+L_X(V) = \int_\Omega X V d \bbP
+\]
+where $V \in L^\infty$.  The linear functional $L_X(V)$ defines a linear functional on $L^\infty(\Omega, \mcG, \bbP)$.  If we are looking for the representative from $L^1(\Omega, \mcG, \bbP)$ then we get $\bbE[X|\mcG]$.
+
+
+\subsubsection{Bringing it all together}
+
+One big difference between our discussion of conditional distributions and conditional expectations was the type of conditioning occuring.  When we were looking at conditional distributions, we often refered to conditioning on a \sigalg generated by a random variable.  With conditional expectation we refered to conditioning with respect to an arbitrary \sigalg.
 
 (Need to write something connection conditional distribution to conditional expectation.  Perhaps through $\bbE(X|Y) = \bbP(X|Y=y)|y=Y$.)
 
@@ -389,16 +457,19 @@ Thus the turkey thinks it is very likely that he will live tomorrow.
 The more I think about this though, the more Talib doesn't make sense.   For the most part the turkey is correct.  He does have a high chance of living throughout the day.  The day that this does not occur does have a small probabilty of occuring.  It also has severe consequences.  Really, it is the consequences that are devestating.  One must have a loss function to measure how devastating these consequences are.  Relating this to finance, the turkey needs to have some sort of insurance or financial instrument he is using to make this analogy valid.  Even then, if he has calculated his probability correctly, it shouldn't matter.  One wants to include extreme events because they affect the price of an assset.  With CDO's extreme events should have made these assets much cheaper relative to the alleged return.
 \end{remark}
 \end{comment}
+
 \end{example}
 
 We now formally define a Markov process and transition probability.  As discussed earlier, a Markov process is a process whose future distribution, conditioned on the past observations, depends only on the last observed state of the process.  The conditional distribution, in turn, can be characterized by a transition probability, which tells one how the process will be distributed one step into the future, given the current state of the process.
 
 \begin{definition}
-Let $(\Omega, \mcF, \mcF_n, \bbP)$ be a probabilty space and $(S,\mcS)$ be a state space.  A \textbf{Markov chain} or \textbf{Markov process} with respect to the filtration $(\mcF_n)$ is a stochastic process $(X_n)$ whose conditional distribution is governed by
+Let $(\Omega, \mcF, (\mcF_n), \bbP)$ be a probabilty space and $(S,\mcS)$ be a state space.  A \index{Markov chain} \textbf{Markov chain} or \index{Markov process} \textbf{Markov process} with respect to the filtration $(\mcF_n)$ is a stochastic process $(X_n)$ whose conditional distribution is governed by
 \[
 \bbP(X_{n+1} \in B | \mcF_n) = \bbP(X_{n+1} \in B | X_n) \textmd{ for all } B \in \mcS.
 \]
 When $X_n$ is a Markov chain with respect to some filtration $(\mcF_n)$, it is a Markov chain with respect to the natural filtration as well.
+
+When the conditional distribution $\bbP(X_{n+1} \in \cdot | X_n)$ does not depend upon $n$ the Markov chain is said to be \index{homogeneous Markov chain} homogeneous.
 \end{definition}
 
 \begin{definition}
@@ -410,5 +481,55 @@ A function $p:S \times \mcS \ra [0,1]$ is a \index{transition probability} \text
 \end{definition}
 
 A transition probability characterizes a Markov process and a Markov process characterizes a transition probabiltiy.  To clarify this link we must discuss the connection between conditioning on a random variable and conditioning on a \sigalg.
+
+\begin{fact}
+A Markov chain has a transition probability $p_n$ from $X_n = x$ to $X_{n+1}$ for all $n$.  Recall that the conditional distribution of $X_{n+1}$ only depends on the previous state $X_n$.  In particular, $\bbP(X_{n+1} \in B | \mcF_n) = \bbP(X_{n+1} \in B | X_n)$.  If $X_n = x$, then we can calculate the transition probability from $x$ to $X_{n+1}$ by
+\[
+p_n(x,B) = \bbP(X_{n+1} \in B | X_n = x).
+\]
+We will be working primarily with homogeneous Markov chains, in which case there exists one transition probability $p$ such that
+\[
+p(x,B) = \bbP(X_{n+1} \in B | X_n = x).
+\]
+\end{fact}
+
+Transition probabilities provide a convenient way to factor the law of a Markov chain $X = (X_n)$.  The law of a Markov process is defined on the cylinder sets of the state space.  We will discuss the specifics of cylinder sets shortly.  For now, we will simply look at the joint distribution of the first $2$ random variables of $X$.  That is we want to look at 
+\[
+\bbE[ 1_{B_0}(X_0) 1_{B_1}(X_1) ].
+\]
+We can factor this expectation as
+\[
+\bbE \Big[ \; \bbE \Big( \; 1_{B_{1}}(X_{1}) \Big| \mcF_{0} \Big) \; 1_{B_0}(X_0) \; \Big].
+\]
+Since we have a Markov process this becomes
+\[
+\bbE \Big[ \; \bbE \Big( \; 1_{B_{1}}(X_{1}) \Big| X_{0} \Big) \; 1_{B_0}(X_0) \; \Big].
+\]
+Using what we know about conditional expectations when conditioning on $X_0$ get
+\[
+\bbE \Big[ \int_{B_1} p(X_0, dx_1) \; 1_{B_0}(X_0) \; \Big].
+\]
+which in turn is equal to
+\[
+\int_{B_0} \mu(dx_0) \int_{B_1} p_0(x_0, dx_1).
+\]
+We have writting this integral in ``physics notation'' to keep track of the order of integration.  We integrate along $x_1$ first and then $x_0$.  This holds for higher dimensional joint distributions.  It allows us to derive a factorization the joint distribution of $(X_0, \ldots, X_n)$ as
+\[
+\bbP(X_0 \in dx_0, \ldots, X_n \in dx_n) = \mu(dx_0) p_0(x_0, dx_1) \cdots p_{n-1}(x_{n-1}, dx_n).
+\]
+
+\subsubsection{A note on the state space}
+
+To this point we have been apathetic to the state space $(S, \mcS)$.  At times we do not specify what $(S, \mcS)$ is and at times we suggest that the state space is the real numbers.  This ambiguity is not a hindrance since most state spaces can be mapped into the real numbers in a way that preserves the probabilistic characteristics of the underlying Markov Chain.
+
+\begin{definition}
+Suppose $(S,\mcS)$ is a state space.  If there is an measurable, injective function $\phi : S \mapsto \R$ which has a measurable inverse, then $(S,\mcS)$ is said to be a \index{standard Borel state space} \textbf{standard Borel state space}.
+\end{definition}
+
+If one has a Markov chain that maps into a stand Borel state space, then he or she can construct a new chain $Y_n = \phi(X_n)$ with what is essentially identical transition probabilities.  For this reason, we can, without loss of much generality, work with Markov chains which map into the real numbers.
+
+\section{From Transition Probability to Law}
+
+The examples given above were a bit flippant about the mathematical construction of Markov Processes.  In general, one has an idea about how a Markov process should evolve as described by some transition probability.  However, it will require some mathematical rigor to translate a transition probability into a well-defined stochastic process.  For instance, it is not obvoius how one should construct a probability space on which an infinite collection of random variables are defined, nor is it obvious how one defines a law on such a space.  However, this work is well worth the effort, since it will be used repeatedly in the future.  For instance, when one constructs Brownian motion one must use the techniques presented bolow.  This construction will also prove useful when proving properties, such as the Strong Markov property for stocastic processes.
 
 \end{document}
